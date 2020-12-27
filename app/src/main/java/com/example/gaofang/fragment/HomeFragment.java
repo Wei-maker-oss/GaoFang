@@ -16,6 +16,8 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.example.gaofang.R;
 import com.example.gaofang.adapter.BannersingleLayoutAdapter;
+import com.example.gaofang.adapter.TopicTextSingleAdapter;
+import com.example.gaofang.adapter.TopiclinearAdapter;
 import com.example.gaofang.adapter.HotLinearAdapter;
 import com.example.gaofang.adapter.HotTextSingleAdapter;
 import com.example.gaofang.adapter.IconAdapter;
@@ -55,6 +57,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     private LinearLayoutHelper mHotLinearLayoutHelper;
     private ArrayList<HomeBean.DataBean.HotGoodsListBean> mHotGoodsListBeans;
     private HotLinearAdapter mHotLinearAdapter;
+    private SingleLayoutHelper mTopicSingleLayoutHelper;
+    private TopicTextSingleAdapter mTopicTextSingleAdapter;
+    private LinearLayoutHelper mTopiclinearLayoutHelper;
+    private ArrayList<HomeBean.DataBean.TopicListBean> mTopicListBeans;
+    private TopiclinearAdapter mTopicLinearAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,16 +71,16 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
 
     @Override
     protected void initData() {
-            presenter.onStart1();
+        presenter.onStart1();
     }
 
     @Override
     protected void initView(View view) {
-        mHomeRlv=view.findViewById(R.id.home_rlv);
+        mHomeRlv = view.findViewById(R.id.home_rlv);
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(getActivity());
         RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
         mHomeRlv.setRecycledViewPool(recycledViewPool);
-        recycledViewPool.setMaxRecycledViews(0,10);
+        recycledViewPool.setMaxRecycledViews(0, 10);
         // 轮播图
         mBannersingleLayoutHelper = new SingleLayoutHelper();
         mBannerDTOS = new ArrayList<>();
@@ -107,6 +114,14 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mHotGoodsListBeans = new ArrayList<>();
         mHotLinearAdapter = new HotLinearAdapter(getActivity(), mHotLinearLayoutHelper, mHotGoodsListBeans);
 
+        mTopicSingleLayoutHelper = new SingleLayoutHelper();
+        mTopicTextSingleAdapter = new TopicTextSingleAdapter(getActivity(), mTopicSingleLayoutHelper);
+
+        // 线性（专题精选）
+        mTopiclinearLayoutHelper = new LinearLayoutHelper();
+        mTopicListBeans = new ArrayList<>();
+        mTopicLinearAdapter = new TopiclinearAdapter(getActivity(), mTopiclinearLayoutHelper, mTopicListBeans);
+
 
         mDelegateAdapter = new DelegateAdapter(virtualLayoutManager, false);
         // 绑定适配器
@@ -117,8 +132,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mDelegateAdapter.addAdapter(mNewGoodsTextSingleAdapter);
         mDelegateAdapter.addAdapter(mNewGoodsGridAdapter);
         mDelegateAdapter.addAdapter(mHotTextSingleAdapter);
-         mDelegateAdapter.addAdapter(mHotLinearAdapter);
-
+        mDelegateAdapter.addAdapter(mHotLinearAdapter);
+        mDelegateAdapter.addAdapter(mTopicTextSingleAdapter);
+        mDelegateAdapter.addAdapter(mTopicLinearAdapter);
 
 
         mHomeRlv.setLayoutManager(virtualLayoutManager);
@@ -132,8 +148,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
 
     @Override
     public void onShow(Object object) {
-        if(object instanceof HomeBean){
-            HomeBean homeBean= (HomeBean) object;
+        if (object instanceof HomeBean) {
+            HomeBean homeBean = (HomeBean) object;
             List<HomeBean.DataBean.BannerBean> banner = homeBean.getData().getBanner();
             // 添加集合
             mBannerDTOS.addAll(banner);
@@ -158,13 +174,18 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             mHotGoodsListBeans.addAll(hotGoodsList);
             mHotLinearAdapter.notifyDataSetChanged();
 
+            // 线性（精选）
+            List<HomeBean.DataBean.TopicListBean> topicList = homeBean.getData().getTopicList();
+            mTopicListBeans.addAll(topicList);
+            mTopicLinearAdapter.notifyDataSetChanged();
+
 
         }
     }
 
     @Override
     public void onHide(String str) {
-        Log.e("TAG","网络数据错误:"+str);
+        Log.e("TAG", "网络数据错误:" + str);
 
     }
 }
