@@ -12,11 +12,16 @@ import android.view.ViewGroup;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
+import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.example.gaofang.R;
 import com.example.gaofang.adapter.BannersingleLayoutAdapter;
+import com.example.gaofang.adapter.HotLinearAdapter;
+import com.example.gaofang.adapter.HotTextSingleAdapter;
 import com.example.gaofang.adapter.IconAdapter;
 import com.example.gaofang.adapter.MakerGridAdapter;
+import com.example.gaofang.adapter.NewGoodsGridAdapter;
+import com.example.gaofang.adapter.NewGoodsTextSingleAdapter;
 import com.example.gaofang.adapter.TextAdapter;
 import com.example.gaofang.bean.HomeBean;
 import com.example.gaofang.contract.HomeContract;
@@ -36,10 +41,20 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     private IconAdapter mIconAdapter;
     private GridLayoutHelper mIconLayoutHelper;
     private SingleLayoutHelper mTextMakersingleLayoutHelper;
-    private TextAdapter mTextAdapter;
+    private TextAdapter mMakerTextAdapter;
     private GridLayoutHelper mMakerridLayoutHelper;
     private ArrayList<HomeBean.DataBean.BrandListBean> mNewBrandListBeans;
     private MakerGridAdapter mMakerGridAdapter;
+    private SingleLayoutHelper mNewGoodsSingleLayoutHelper;
+    private ArrayList<HomeBean.DataBean.NewGoodsListBean> mNewGoodsListBeans;
+    private NewGoodsTextSingleAdapter mNewGoodsTextSingleAdapter;
+    private GridLayoutHelper mNewGoodsGridLayoutHelper;
+    private NewGoodsGridAdapter mNewGoodsGridAdapter;
+    private SingleLayoutHelper mHotSingleLayoutHelper;
+    private HotTextSingleAdapter mHotTextSingleAdapter;
+    private LinearLayoutHelper mHotLinearLayoutHelper;
+    private ArrayList<HomeBean.DataBean.HotGoodsListBean> mHotGoodsListBeans;
+    private HotLinearAdapter mHotLinearAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,21 +85,39 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mIconAdapter = new IconAdapter(getActivity(), mIconLayoutHelper, mChannelBeans);
 
         mTextMakersingleLayoutHelper = new SingleLayoutHelper();
-        mTextAdapter = new TextAdapter(getActivity(), mTextMakersingleLayoutHelper);
+        mMakerTextAdapter = new TextAdapter(getActivity(), mTextMakersingleLayoutHelper);
 
-        // 网格
+        // 网格（品牌制造商）
         mMakerridLayoutHelper = new GridLayoutHelper(2);
         mNewBrandListBeans = new ArrayList<>();
         mMakerGridAdapter = new MakerGridAdapter(getActivity(), mMakerridLayoutHelper, mNewBrandListBeans);
 
+        mNewGoodsSingleLayoutHelper = new SingleLayoutHelper();
+        mNewGoodsTextSingleAdapter = new NewGoodsTextSingleAdapter(getActivity(), mNewGoodsSingleLayoutHelper);
+
+        // 网格（新品）
+        mNewGoodsGridLayoutHelper = new GridLayoutHelper(2);
+        mNewGoodsListBeans = new ArrayList<>();
+        mNewGoodsGridAdapter = new NewGoodsGridAdapter(getActivity(), mNewGoodsGridLayoutHelper, mNewGoodsListBeans);
+
+        mHotSingleLayoutHelper = new SingleLayoutHelper();
+        mHotTextSingleAdapter = new HotTextSingleAdapter(getActivity(), mHotSingleLayoutHelper);
+        // 线性（人气推荐）
+        mHotLinearLayoutHelper = new LinearLayoutHelper();
+        mHotGoodsListBeans = new ArrayList<>();
+        mHotLinearAdapter = new HotLinearAdapter(getActivity(), mHotLinearLayoutHelper, mHotGoodsListBeans);
 
 
         mDelegateAdapter = new DelegateAdapter(virtualLayoutManager, false);
         // 绑定适配器
         mDelegateAdapter.addAdapter(mBannersingleLayoutAdapter);
         mDelegateAdapter.addAdapter(mIconAdapter);
-        mDelegateAdapter.addAdapter(mTextAdapter);
-
+        mDelegateAdapter.addAdapter(mMakerTextAdapter);
+        mDelegateAdapter.addAdapter(mMakerGridAdapter);
+        mDelegateAdapter.addAdapter(mNewGoodsTextSingleAdapter);
+        mDelegateAdapter.addAdapter(mNewGoodsGridAdapter);
+        mDelegateAdapter.addAdapter(mHotTextSingleAdapter);
+         mDelegateAdapter.addAdapter(mHotLinearAdapter);
 
 
 
@@ -114,6 +147,17 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             List<HomeBean.DataBean.BrandListBean> brandList = homeBean.getData().getBrandList();
             mNewBrandListBeans.addAll(brandList);
             mMakerGridAdapter.notifyDataSetChanged();
+
+            // 网格（新品）
+            List<HomeBean.DataBean.NewGoodsListBean> newGoodsList = homeBean.getData().getNewGoodsList();
+            mNewGoodsListBeans.addAll(newGoodsList);
+            mNewGoodsGridAdapter.notifyDataSetChanged();
+
+            // 线性（人气推荐）
+            List<HomeBean.DataBean.HotGoodsListBean> hotGoodsList = homeBean.getData().getHotGoodsList();
+            mHotGoodsListBeans.addAll(hotGoodsList);
+            mHotLinearAdapter.notifyDataSetChanged();
+
 
         }
     }

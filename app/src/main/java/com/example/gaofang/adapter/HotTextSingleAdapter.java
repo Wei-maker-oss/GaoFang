@@ -14,11 +14,11 @@ import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.example.gaofang.R;
 
-public class TextAdapter extends DelegateAdapter.Adapter {
+public class HotTextSingleAdapter extends DelegateAdapter.Adapter {
     private Context mContext;
     private SingleLayoutHelper singleLayoutHelper;
 
-    public TextAdapter(Context mContext, SingleLayoutHelper singleLayoutHelper) {
+    public HotTextSingleAdapter(Context mContext, SingleLayoutHelper singleLayoutHelper) {
         this.mContext = mContext;
         this.singleLayoutHelper = singleLayoutHelper;
     }
@@ -31,25 +31,26 @@ public class TextAdapter extends DelegateAdapter.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_home_makertext, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_home_hottext, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder= (ViewHolder) holder;
-        viewHolder.title.setText("品牌制造商直供");
+        viewHolder.title.setText("人气推荐");
     }
 
     @Override
     public int getItemCount() {
         return 1;
     }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.item_home_tv);
+            title=itemView.findViewById(R.id.item_hot_tv);
         }
     }
 }
