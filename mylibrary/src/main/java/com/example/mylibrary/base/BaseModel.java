@@ -1,4 +1,4 @@
 package com.example.mylibrary.base;
 
-public interface BaseMode {
+public interface BaseModel {
 }

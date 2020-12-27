@@ -1,33 +1,30 @@
 package com.example.mylibrary.base;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public abstract class BaseActivity<p extends BasePresenter> extends AppCompatActivity implements BaseView {
-  public   p presenter;
+public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity implements BaseView{
+    protected T presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(ID());
+        setContentView(getLayoutID());
         if(presenter==null){
-            presenter=add();
-            presenter.attch(this);
-
+            presenter=getPresenter();
+            presenter.attachView(this);
+            Log.e("TAG", "onCreate: "+this.toString());
         }
         initView();
         initData();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        presenter.destroy();
-    }
-
-    protected abstract int ID();
     protected abstract void initData();
     protected abstract void initView();
-    protected abstract p add();
+    protected abstract int getLayoutID();
+    public abstract T getPresenter();
+
 }

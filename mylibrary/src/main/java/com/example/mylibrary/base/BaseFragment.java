@@ -1,6 +1,5 @@
 package com.example.mylibrary.base;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,32 +9,43 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public abstract class BaseFragment<p extends BasePresenter>  extends Fragment implements BaseView {
-    public p presenter;
-//    View inflate = inflater.inflate(ID(), container, false);
-    private Context context =getActivity();
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
+public abstract class BaseFragment<T extends BasePresenter> extends Fragment implements BaseView {
+    protected T presenter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflate = inflater.inflate(ID(), container, false);
+        View view = inflater.inflate(getLayoutID(), null);
         if(presenter==null){
-            presenter=add();
-            presenter.attch(this);
+//            presenter=getPresnter();
+//            presenter.attachView(this);
+            addPresenter();
         }
-        initView(inflate);
+        initView(view);
         initData();
-        return inflate;
+        return view;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.destroy();
+//    protected abstract T getPresnter();
+    private void addPresenter(){
+        Type genericSuperclass = this.getClass().getGenericSuperclass();
+        Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
+        Class type = (Class) actualTypeArguments[0];
+        try {
+            presenter = (T) type.newInstance();
+            presenter.attachView(this);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
-    public abstract int ID();
-    protected abstract void initView(View view);
     protected abstract void initData();
-    public abstract p  add();
+
+    protected abstract void initView(View view);
+
+    protected abstract int getLayoutID();
 }

@@ -1,18 +1,15 @@
 package com.example.mylibrary.base;
 
-public abstract class BasePresenter <V extends BaseView,M extends BaseMode> {
-    public V iview;
-    public M imode;
+import android.util.Log;
 
-    public void attch(V v) {
-        iview = v;
-        imode=setImode();
+public abstract class BasePresenter<V extends BaseView,E extends BaseModel> {
+    public V iView;
+    public E iModel;
+    public void attachView(V v){
+        iView=v;
+        iModel=getModel();
+        Log.e("TAG", "attachView: "+v.toString() );
     }
 
-    public void destroy(){
-        iview=null;
-        imode=null;
-    }
-
-    public abstract M setImode();
+    protected abstract E getModel();
 }
