@@ -16,6 +16,7 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.example.gaofang.R;
 import com.example.gaofang.adapter.BannersingleLayoutAdapter;
+import com.example.gaofang.adapter.LinearLayout2Adapter;
 import com.example.gaofang.adapter.TopicTextSingleAdapter;
 import com.example.gaofang.adapter.TopiclinearAdapter;
 import com.example.gaofang.adapter.HotLinearAdapter;
@@ -62,6 +63,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     private LinearLayoutHelper mTopiclinearLayoutHelper;
     private ArrayList<HomeBean.DataBean.TopicListBean> mTopicListBeans;
     private TopiclinearAdapter mTopicLinearAdapter;
+    private LinearLayoutHelper linearLayoutHelper2;
+    private ArrayList<HomeBean.DataBean.CategoryListBean> mCategoryListBeans;
+    private LinearLayout2Adapter mLinearLayout2Adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -122,6 +126,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mTopicListBeans = new ArrayList<>();
         mTopicLinearAdapter = new TopiclinearAdapter(getActivity(), mTopiclinearLayoutHelper, mTopicListBeans);
 
+        linearLayoutHelper2 = new LinearLayoutHelper();
+        mCategoryListBeans = new ArrayList<>();
+        mLinearLayout2Adapter = new LinearLayout2Adapter(getActivity(), linearLayoutHelper2, mCategoryListBeans);
+
+
         mDelegateAdapter = new DelegateAdapter(virtualLayoutManager, false);
         // 绑定适配器
         mDelegateAdapter.addAdapter(mBannersingleLayoutAdapter);
@@ -134,6 +143,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mDelegateAdapter.addAdapter(mHotLinearAdapter);
         mDelegateAdapter.addAdapter(mTopicTextSingleAdapter);
         mDelegateAdapter.addAdapter(mTopicLinearAdapter);
+        mDelegateAdapter.addAdapter(mLinearLayout2Adapter);
 
         mHomeRlv.setLayoutManager(virtualLayoutManager);
         mHomeRlv.setAdapter(mDelegateAdapter);
@@ -176,6 +186,12 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             List<HomeBean.DataBean.TopicListBean> topicList = homeBean.getData().getTopicList();
             mTopicListBeans.addAll(topicList);
             mTopicLinearAdapter.notifyDataSetChanged();
+
+            List<HomeBean.DataBean.CategoryListBean> categoryList = homeBean.getData().getCategoryList();
+            mCategoryListBeans.addAll(categoryList);
+            mLinearLayout2Adapter.notifyDataSetChanged();
+
+
         }
     }
 

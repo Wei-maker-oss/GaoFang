@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp"
+    android:background="#fff"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/tv_home_eight_name"
+        android:text="专题精选"
+        android:textColor="#171616"
+        android:gravity="center"
+        android:background="#fff"
+        android:textSize="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rlv_home_eight"
+        android:layout_below="@+id/tv_home_eight_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>
