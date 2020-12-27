@@ -16,6 +16,8 @@ import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.example.gaofang.R;
 import com.example.gaofang.adapter.BannersingleLayoutAdapter;
 import com.example.gaofang.adapter.IconAdapter;
+import com.example.gaofang.adapter.MakerGridAdapter;
+import com.example.gaofang.adapter.TextAdapter;
 import com.example.gaofang.bean.HomeBean;
 import com.example.gaofang.contract.HomeContract;
 import com.example.gaofang.presenter.HomePresenter;
@@ -33,6 +35,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     private ArrayList<HomeBean.DataBean.ChannelBean> mChannelBeans;
     private IconAdapter mIconAdapter;
     private GridLayoutHelper mIconLayoutHelper;
+    private SingleLayoutHelper mTextMakersingleLayoutHelper;
+    private TextAdapter mTextAdapter;
+    private GridLayoutHelper mMakerridLayoutHelper;
+    private ArrayList<HomeBean.DataBean.BrandListBean> mNewBrandListBeans;
+    private MakerGridAdapter mMakerGridAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,12 +69,21 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mChannelBeans = new ArrayList<>();
         mIconAdapter = new IconAdapter(getActivity(), mIconLayoutHelper, mChannelBeans);
 
+        mTextMakersingleLayoutHelper = new SingleLayoutHelper();
+        mTextAdapter = new TextAdapter(getActivity(), mTextMakersingleLayoutHelper);
+
+        // 网格
+        mMakerridLayoutHelper = new GridLayoutHelper(2);
+        mNewBrandListBeans = new ArrayList<>();
+        mMakerGridAdapter = new MakerGridAdapter(getActivity(), mMakerridLayoutHelper, mNewBrandListBeans);
+
 
 
         mDelegateAdapter = new DelegateAdapter(virtualLayoutManager, false);
         // 绑定适配器
         mDelegateAdapter.addAdapter(mBannersingleLayoutAdapter);
         mDelegateAdapter.addAdapter(mIconAdapter);
+        mDelegateAdapter.addAdapter(mTextAdapter);
 
 
 
@@ -94,7 +110,10 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             mChannelBeans.addAll(channel);
             mIconAdapter.notifyDataSetChanged();
 
-
+            // 网格Maker
+            List<HomeBean.DataBean.BrandListBean> brandList = homeBean.getData().getBrandList();
+            mNewBrandListBeans.addAll(brandList);
+            mMakerGridAdapter.notifyDataSetChanged();
 
         }
     }

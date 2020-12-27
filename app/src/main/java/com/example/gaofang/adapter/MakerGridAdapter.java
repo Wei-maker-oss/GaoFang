@@ -19,15 +19,15 @@ import com.example.gaofang.bean.HomeBean;
 
 import java.util.ArrayList;
 
-public class IconAdapter extends DelegateAdapter.Adapter {
+public class MakerGridAdapter extends DelegateAdapter.Adapter {
     private Context mContext;
     private GridLayoutHelper gridLayoutHelper;
-    private ArrayList<HomeBean.DataBean.ChannelBean> mChannelBeans;
+    private ArrayList<HomeBean.DataBean.BrandListBean> mNewGoodsListBean;
 
-    public IconAdapter(Context mContext, GridLayoutHelper gridLayoutHelper, ArrayList<HomeBean.DataBean.ChannelBean> mChannelBeans) {
+    public MakerGridAdapter(Context mContext, GridLayoutHelper gridLayoutHelper, ArrayList<HomeBean.DataBean.BrandListBean> mNewGoodsListBean) {
         this.mContext = mContext;
         this.gridLayoutHelper = gridLayoutHelper;
-        this.mChannelBeans = mChannelBeans;
+        this.mNewGoodsListBean = mNewGoodsListBean;
     }
 
     @Override
@@ -38,31 +38,32 @@ public class IconAdapter extends DelegateAdapter.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_home_icon, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_home_maker, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder= (ViewHolder) holder;
-        HomeBean.DataBean.ChannelBean channelBean = mChannelBeans.get(position);
-        Glide.with(mContext).load(channelBean.getIcon_url()).into(viewHolder.img);
-        viewHolder.tv.setText(channelBean.getName());
-
+        HomeBean.DataBean.BrandListBean bean = mNewGoodsListBean.get(position);
+        Glide.with(mContext).load(bean.getPic_url()).into(viewHolder.img);
+        viewHolder.name.setText(bean.getName());
+        viewHolder.price.setText(bean.getFloor_price()+"元起");
     }
 
     @Override
     public int getItemCount() {
-        return mChannelBeans.size();
+        return mNewGoodsListBean.size();
     }
-
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView img;
-        private TextView tv;
+        private TextView name;
+        private TextView price;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            img = (ImageView) itemView.findViewById(R.id.home_icon_img);
-            tv = (TextView) itemView.findViewById(R.id.home_icon_tv);
+            img = (ImageView) itemView.findViewById(R.id.item_home_maker_newpic_url);
+            name = (TextView) itemView.findViewById(R.id.item_home_maker_tv_name);
+            price = (TextView) itemView.findViewById(R.id.item_home_maker_tv_price);
         }
     }
 }
